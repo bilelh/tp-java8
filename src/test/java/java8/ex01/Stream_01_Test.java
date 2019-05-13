@@ -84,9 +84,10 @@ public class Stream_01_Test {
         // TODO récupérer toutes les commandes dont
         // TODO le prénom du client est "Johnny"
         // TODO dont au moins une pizza a un prix >= 1300
-      /*  List<Order> result = orders.stream()
-        		.filter(o -> o.getCustomer().getFirstname().equals("Johnny") && orders.stream().filter(p -> p.getPizzas().g))))
-        		.collect( Collectors.toList()) ;*/
+        List<Order> result = orders.stream()
+        		.filter(o -> o.getCustomer().getFirstname().equals("Johnny"))
+        		.filter(p -> p.getPizzas().stream().anyMatch(a -> a.getPrice() >= 1300))
+        		.collect( Collectors.toList()) ;
 
         assertThat(result, hasSize(1));
         assertThat(result.get(0), hasProperty("id", is(8)));
@@ -135,7 +136,9 @@ public class Stream_01_Test {
         List<Order> orders = new Data().getOrders();
 
         // TODO Trier les commandes sur le nom de famille du client
-        List<Order> result = orders.stream().map(o -> o.getCustomer().getLastname()).sorted().collect(Collectors.toList())  ;
+        List<Order> result = orders.stream().sorted((p1, p2) -> p1.getCustomer().getLastname()
+				.compareTo(p2.getCustomer().getLastname()))        		
+        		.collect(Collectors.toList());
 
         assertThat(result, hasSize(8));
         
